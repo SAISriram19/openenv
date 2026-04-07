@@ -25,7 +25,7 @@ tags:
 
 environment:
   type: "http"
-  entrypoint: "server:app"
+  entrypoint: "server.app:app"
   host: "0.0.0.0"
   port: 7860
 

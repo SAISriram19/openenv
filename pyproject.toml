@@ -4,14 +4,18 @@ version = "1.0.0"
 description = "Regulatory Compliance Document Review - OpenEnv Environment"
 requires-python = ">=3.10"
 dependencies = [
-    "fastapi==0.115.6",
-    "uvicorn[standard]==0.34.0",
-    "pydantic==2.10.4",
-    "httpx==0.28.1",
-    "openai==1.58.1",
-    "pyyaml==6.0.2",
-    "requests==2.32.3",
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.34.0",
+    "pydantic>=2.10.0",
+    "httpx>=0.28.0",
+    "openai>=1.58.0",
+    "pyyaml>=6.0.0",
+    "requests>=2.32.0",
+    "openenv-core>=0.2.0",
 ]
+
+[project.scripts]
+compliance-review-server = "server.app:start"
 
 [build-system]
 requires = ["setuptools>=68.0"]
