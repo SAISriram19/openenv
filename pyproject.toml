@@ -1,22 +1,28 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "compliance-review-env"
-version = "1.0.0"
-description = "Regulatory Compliance Document Review - OpenEnv Environment"
+name = "openenv-compliance-review"
+version = "0.1.0"
+description = "Regulatory Compliance Document Review environment for OpenEnv"
 requires-python = ">=3.10"
 dependencies = [
+    "openenv-core[core]>=0.2.2",
+    "openai>=1.0.0",
+    "huggingface-hub>=0.20.0",
     "fastapi>=0.115.0",
     "uvicorn[standard]>=0.34.0",
     "pydantic>=2.10.0",
     "httpx>=0.28.0",
-    "openai>=1.58.0",
     "pyyaml>=6.0.0",
     "requests>=2.32.0",
-    "openenv-core>=0.2.0",
 ]
 
 [project.scripts]
-compliance-review-server = "server.app:main"
+server = "compliance_review.server.app:main"
 
-[build-system]
-requires = ["setuptools>=68.0"]
-build-backend = "setuptools.backends._legacy:_Backend"
+[tool.setuptools]
+include-package-data = true
+packages = ["compliance_review", "compliance_review.server", "compliance_review.env"]
+package-dir = { "compliance_review" = ".", "compliance_review.server" = "server", "compliance_review.env" = "env" }
