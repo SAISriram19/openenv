@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [project.scripts]
-compliance-review-server = "server.app:start"
+compliance-review-server = "server.app:main"
 
 [build-system]
 requires = ["setuptools>=68.0"]
