@@ -1,0 +1,132 @@
+name: compliance-review
+display_name: "Regulatory Compliance Document Review"
+description: >
+  A realistic OpenEnv environment simulating regulatory compliance review work.
+  Agents act as compliance analysts reviewing business documents (privacy policies,
+  loan applications, vendor agreements) against regulatory rules (GDPR-style data
+  privacy, fair lending, KYC/AML, consumer protection). Agents must read documents,
+  extract relevant clauses, cross-reference against regulations, flag violations
+  with citations, and produce a compliance verdict. Graded on detection accuracy,
+  completeness, false positive rate, and efficiency.
+
+version: "1.0.0"
+author: "ComplianceEnv Team"
+license: "MIT"
+tags:
+  - openenv
+  - compliance
+  - regulatory
+  - legal
+  - real-world
+  - document-review
+  - GDPR
+  - KYC
+  - fair-lending
+
+environment:
+  type: "http"
+  entrypoint: "server:app"
+  host: "0.0.0.0"
+  port: 7860
+
+api:
+  reset:
+    method: POST
+    path: /reset
+    description: "Reset to a fresh compliance review scenario"
+  step:
+    method: POST
+    path: /step
+    description: "Execute an action (read doc, flag violation, etc.)"
+  state:
+    method: GET
+    path: /state
+    description: "Get full internal environment state"
+  health:
+    method: GET
+    path: /health
+    description: "Health check"
+  tasks:
+    method: GET
+    path: /tasks
+    description: "List available review tasks"
+  grade:
+    method: POST
+    path: /grade
+    description: "Grade the current episode"
+
+action_space:
+  type: "structured"
+  model: "env.models.Action"
+  actions:
+    - read_document: "Read document overview and list sections"
+    - read_section: "Read a specific section's full text"
+    - read_regulation: "Read a regulation's requirements and examples"
+    - search_document: "Search for keywords in a document"
+    - cross_reference: "Side-by-side comparison of a section vs regulation"
+    - flag_violation: "Flag a regulatory violation with citation and confidence score"
+    - flag_compliant: "Mark a section as compliant (earns trap detection bonus)"
+    - request_clarification: "Request clarification on ambiguous text"
+    - add_note: "Add an analysis note"
+    - submit_review: "Submit final compliance review verdict"
+    - noop: "Take no action"
+
+observation_space:
+  type: "structured"
+  model: "env.models.Observation"
+
+reward_space:
+  type: "structured"
+  model: "env.models.Reward"
+  range: [-1.0, 1.0]
+  components:
+    - detection_score: "Credit for finding real violations (0-1)"
+    - accuracy_score: "Precision — correct flags vs total flags (0-1)"
+    - completeness_score: "Recall — violations found vs total (0-1)"
+    - process_quality: "Investigation before flagging — did agent read regs first?"
+    - confidence_calibration: "Overconfident wrong flags penalized, well-calibrated rewarded"
+    - trap_detection: "Bonus for correctly identifying compliant clauses (flag_compliant)"
+    - false_positive_penalty: "Penalty for flagging compliant sections"
+    - efficiency_bonus: "Bonus for completing review quickly"
+
+tasks:
+  - id: easy_privacy_review
+    title: "Privacy Policy Compliance Review"
+    difficulty: easy
+    description: "Review a privacy policy against data protection regulations (6 violations)"
+    max_steps: 20
+    grader: "env.graders.EasyGrader"
+
+  - id: medium_lending_review
+    title: "Loan Application Compliance Review"
+    difficulty: medium
+    description: "Cross-reference loan application and lending policy against fair lending + KYC/AML (6 violations across 2 docs)"
+    max_steps: 20
+    grader: "env.graders.MediumGrader"
+
+  - id: hard_vendor_dpa_review
+    title: "Vendor DPA Multi-Regulation Review"
+    difficulty: hard
+    description: "Review DPA, sub-processor list, and consent form against data privacy + consumer protection (6 violations across 3 docs, with false-positive traps)"
+    max_steps: 30
+    grader: "env.graders.HardGrader"
+
+  - id: medium_employment_review
+    title: "Employee Handbook Compliance Review"
+    difficulty: medium
+    description: "Review startup employee handbook against employment/labor regulations (6 violations — overtime, leave, termination, non-compete, IP, whistleblower)"
+    max_steps: 20
+    grader: "env.graders.EmploymentGrader"
+
+  - id: hard_financial_reporting
+    title: "Financial Report & Internal Controls Review"
+    difficulty: hard
+    description: "Review quarterly financial report and internal controls memo against financial reporting regulations (5 violations across 2 docs, with compliant-looking traps)"
+    max_steps: 25
+    grader: "env.graders.FinancialGrader"
+
+infrastructure:
+  dockerfile: "./Dockerfile"
+  resources:
+    vcpu: 2
+    memory_gb: 8
