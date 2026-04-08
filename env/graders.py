@@ -1,6 +1,7 @@
 """
 Task graders for the Regulatory Compliance Document Review environment.
-Each grader scores agent performance on a scale of 0.0 to 1.0.
+Each grader scores agent performance strictly within (0.01, 0.99).
+Updated: force redeploy
 
 Scoring dimensions (consistent across all graders):
 - Detection: Did the agent find the violations? (varies 25-35%)
