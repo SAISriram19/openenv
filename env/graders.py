@@ -22,8 +22,8 @@ class BaseGrader:
     def grade(self, state: EnvironmentState) -> float:
         raise NotImplementedError
     def _clamp(self, v: float) -> float:
-        # Strictly between 0 and 1, exclusive of boundaries
-        return max(0.001, min(0.999, round(v, 4)))
+        epsilon = 1e-6
+        return max(epsilon, min(round(v, 4), 1.0 - epsilon))
     def _efficiency(self, state, weight):
         if not state.review_submitted or state.detected_correctly == 0:
             return 0.0

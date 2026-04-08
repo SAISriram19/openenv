@@ -7,12 +7,9 @@ from typing import Any, Dict, List
 import requests
 from openai import OpenAI
 
-API_BASE_URL = os.getenv("API_BASE_URL", "https://router.huggingface.co/v1")
-MODEL_NAME = os.getenv("MODEL_NAME", "Qwen/Qwen2.5-72B-Instruct")
-HF_TOKEN = os.getenv("HF_TOKEN")
-
-if HF_TOKEN is None:
-    raise ValueError("HF_TOKEN environment variable is required")
+API_BASE_URL = os.getenv("API_BASE_URL", "https://api.openai.com/v1")
+MODEL_NAME = os.getenv("MODEL_NAME", "gpt-4o-mini")
+HF_TOKEN = os.getenv("HF_TOKEN", "")
 
 client = OpenAI(base_url=API_BASE_URL, api_key=HF_TOKEN)
 
@@ -114,7 +111,7 @@ def run_task(env, task_id, max_steps):
     success = False
     score = 0.0
 
-    print(f"[START] task={task_id} env={BENCHMARK} model={MODEL_NAME}")
+    print(f"[START] task={task_id} env={BENCHMARK} model={MODEL_NAME}", flush=True)
 
     try:
         reset_result = env.reset(task_id)
@@ -162,7 +159,7 @@ def run_task(env, task_id, max_steps):
                 step_error = ar.get("message", "unknown")[:200].replace('\n', ' ')
 
             done_str = "true" if done else "false"
-            print(f"[STEP] step={step} action={atype} reward={r:.2f} done={done_str} error={step_error}")
+            print(f"[STEP] step={step} action={atype} reward={r:.2f} done={done_str} error={step_error}", flush=True)
 
             if done:
                 break
@@ -176,7 +173,7 @@ def run_task(env, task_id, max_steps):
     finally:
         success_str = "true" if success else "false"
         rewards_str = ",".join(f"{r:.2f}" for r in rewards_list)
-        print(f"[END] success={success_str} steps={steps_taken} rewards={rewards_str}")
+        print(f"[END] success={success_str} steps={steps_taken} score={score:.2f} rewards={rewards_str}", flush=True)
 
     return {"task_id": task_id, "score": score, "steps_used": steps_taken}
 

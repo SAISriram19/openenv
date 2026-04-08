@@ -140,10 +140,14 @@ async def grade():
         raise HTTPException(status_code=400, detail=str(e))
 
 
-def main():
+def main(host: str = "0.0.0.0", port: int = 7860):
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=7860)
+    uvicorn.run(app, host=host, port=port)
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--port", type=int, default=7860)
+    args = parser.parse_args()
+    main(port=args.port)
