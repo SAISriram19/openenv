@@ -8,10 +8,18 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from env.environment import ComplianceReviewEnv
-from env.graders import grade_episode
-from env.models import Action, EnvironmentState, Observation, Reward
-from env.scenarios import SCENARIOS
+try:
+    from env.environment import ComplianceReviewEnv
+    from env.graders import grade_episode
+    from env.models import Action, EnvironmentState, Observation, Reward
+    from env.scenarios import SCENARIOS
+except (ImportError, ModuleNotFoundError):
+    import sys, os
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    from env.environment import ComplianceReviewEnv
+    from env.graders import grade_episode
+    from env.models import Action, EnvironmentState, Observation, Reward
+    from env.scenarios import SCENARIOS
 
 
 app = FastAPI(
