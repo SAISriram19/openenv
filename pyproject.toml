@@ -20,9 +20,8 @@ dependencies = [
 ]
 
 [project.scripts]
-server = "compliance_review.server.app:main"
+server = "server.app:main"
 
 [tool.setuptools]
 include-package-data = true
-packages = ["compliance_review", "compliance_review.server", "compliance_review.env"]
-package-dir = { "compliance_review" = ".", "compliance_review.server" = "server", "compliance_review.env" = "env" }
+packages = ["server", "env"]
