@@ -22,7 +22,7 @@ class BaseGrader:
     def grade(self, state: EnvironmentState) -> float:
         raise NotImplementedError
     def _clamp(self, v: float) -> float:
-        epsilon = 1e-6
+        epsilon = 0.01
         return max(epsilon, min(round(v, 4), 1.0 - epsilon))
     def _efficiency(self, state, weight):
         if not state.review_submitted or state.detected_correctly == 0:
@@ -158,4 +158,6 @@ def grade_episode(state: EnvironmentState) -> float:
     grader = GRADERS.get(state.task_id)
     if grader is None:
         raise ValueError(f"No grader for task '{state.task_id}'")
-    return grader.grade(state)
+    score = grader.grade(state)
+    # Double safety: ensure strictly between 0 and 1
+    return max(0.01, min(score, 0.99))
